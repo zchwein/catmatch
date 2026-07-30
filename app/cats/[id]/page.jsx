@@ -18,6 +18,7 @@ import {
   FaExclamationCircle,
 } from "react-icons/fa";
 import axios from "axios";
+import { getCatColorStyle } from "@/utils/colorHelper";
 
 const CatDetailPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -185,8 +186,8 @@ const CatDetailPage = () => {
                         <span className="text-[10px] text-slate-400 font-bold uppercase block">Warna Bulu</span>
                         <span className="font-extrabold text-xs text-slate-800 capitalize flex items-center gap-1.5">
                           <span
-                            className="w-2.5 h-2.5 rounded-full border border-slate-300 inline-block"
-                            style={{ backgroundColor: cat?.color?.toLowerCase() }}
+                            className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-xs"
+                            style={getCatColorStyle(cat?.color)}
                           ></span>
                           {cat?.color}
                         </span>

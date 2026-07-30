@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { getCatColorStyle } from "@/utils/colorHelper";
 import {
   FaHeart,
   FaSearch,
@@ -286,8 +287,12 @@ const CatMatch = () => {
                                 : "Betina ♀"}
                             </span>
                             <span>•</span>
-                            <span>
+                            <span className="inline-flex items-center gap-1.5">
                               <strong>Warna:</strong> {activeSelectedCatObj.warna}
+                              <span
+                                className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-xs"
+                                style={getCatColorStyle(activeSelectedCatObj.warna)}
+                              ></span>
                             </span>
                           </div>
                         </div>
