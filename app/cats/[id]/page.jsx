@@ -19,6 +19,7 @@ import {
 } from "react-icons/fa";
 import axios from "axios";
 import { getCatColorStyle } from "@/utils/colorHelper";
+import { getApiUrl } from "@/utils/apiConfig";
 
 const CatDetailPage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -36,7 +37,7 @@ const CatDetailPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cat/${id}`
+          `${getApiUrl()}/api/cat/${id}`
         );
         const catData = response.data.cat;
         setCat(catData);
@@ -47,7 +48,7 @@ const CatDetailPage = () => {
         if (kucing1 && kucing2) {
           try {
             const prediksiRes = await axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/api/cat/prediksi`,
+              `${getApiUrl()}/api/cat/prediksi`,
               { kucing1Id: kucing1, kucing2Id: kucing2 }
             );
             setPrediksiAnak(prediksiRes.data.data);

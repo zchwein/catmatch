@@ -8,6 +8,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { getCatColorStyle } from "@/utils/colorHelper";
+import { getApiUrl } from "@/utils/apiConfig";
 import {
   FaHeart,
   FaSearch,
@@ -48,7 +49,7 @@ const CatMatch = () => {
       try {
         if (userID) {
           const userCatsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cat/owner/${userID}`
+            `${getApiUrl()}/api/cat/owner/${userID}`
           );
           const userCatsData = userCatsRes.data.cat;
           setUserCats(userCatsData);
@@ -62,7 +63,7 @@ const CatMatch = () => {
           }
         }
 
-        const allCatsRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/cat/`);
+        const allCatsRes = await axios.get(`${getApiUrl()}/api/cat/`);
         setAllCats(allCatsRes.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -80,7 +81,7 @@ const CatMatch = () => {
         setRecommendLoading(true);
         try {
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cat/recommended/${selectedCat}`
+            `${getApiUrl()}/api/cat/recommended/${selectedCat}`
           );
           setRecommendedCats(res.data);
         } catch (error) {

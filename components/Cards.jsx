@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { FaHeart, FaPaw, FaCheckCircle, FaTimesCircle, FaMars, FaVenus } from "react-icons/fa";
 import { getCatColorStyle } from "@/utils/colorHelper";
+import { getApiUrl } from "@/utils/apiConfig";
 
 const Cards = ({
   cat: initialCat,
@@ -16,7 +17,7 @@ const Cards = ({
 
   const handleSimpanKonfirmasi = async (status) => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/cat/perjodohan/update`, {
+      await axios.post(`${getApiUrl()}/api/cat/perjodohan/update`, {
         kucing1: catIdOwner,
         kucing2: cat.id,
         status: status,

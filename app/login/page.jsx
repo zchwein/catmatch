@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaUser, FaLock, FaPaw, FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
+import { getApiUrl } from "@/utils/apiConfig";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        `${getApiUrl()}/api/auth/login`,
         formData
       );
       if (response.status === 200) {

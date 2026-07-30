@@ -20,6 +20,7 @@ import {
   FaCheck,
 } from "react-icons/fa";
 import axios from "axios";
+import { getApiUrl } from "@/utils/apiConfig";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -136,7 +137,7 @@ export default function RegisterPage() {
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/add`,
+        `${getApiUrl()}/api/users/add`,
         dataSubmit,
         {
           headers: {

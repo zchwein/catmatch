@@ -16,6 +16,7 @@ import Cards from "@/components/Cards";
 import AddCatModal from "@/components/AddCatModal";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
+import { getApiUrl } from "@/utils/apiConfig";
 
 const ProfilePage = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -44,7 +45,7 @@ const ProfilePage = () => {
         setOwnerData(dataUser);
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cat/owner/${dataUser.id}`
+          `${getApiUrl()}/api/cat/owner/${dataUser.id}`
         );
         const catOwner = response.data.cat;
 
@@ -67,7 +68,7 @@ const ProfilePage = () => {
       if (selectedCatId === null) return;
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/cat/perjodohan/get/${selectedCatId}`
+          `${getApiUrl()}/api/cat/perjodohan/get/${selectedCatId}`
         );
         setPasanganKucing(response.data);
       } catch (err) {
