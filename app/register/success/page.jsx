@@ -5,10 +5,14 @@ import { useEffect, useState } from "react";
 import { FaPaw, FaCheckCircle, FaHome, FaUser } from "react-icons/fa";
 
 export default function RegisterSuccessPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   useEffect(() => {
+    setIsMounted(true);
     setImgUrl(localStorage.getItem("imgUrl"));
   }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-amber-50 via-rose-50 to-amber-100/50 relative overflow-hidden">
