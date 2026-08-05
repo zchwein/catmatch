@@ -101,7 +101,7 @@ const CatMatch = () => {
 
       const age = Math.floor(
         (Date.now() - new Date(cat.tglLahir).getTime()) /
-          (1000 * 60 * 60 * 24 * 30)
+        (1000 * 60 * 60 * 24 * 30)
       );
 
       if (filters.minAge && age < parseInt(filters.minAge)) return false;
@@ -155,7 +155,7 @@ const CatMatch = () => {
           </div>
         </div>
         <p className="text-amber-900 font-bold text-sm tracking-wide animate-pulse">
-          Memuat Pasangan Kucing...
+          Memuat CatMatch...
         </p>
       </div>
     );
@@ -197,7 +197,9 @@ const CatMatch = () => {
                     <span className="text-xs text-slate-500 font-medium">Akurasi Match</span>
                   </div>
                   <div className="text-center">
-                    <span className="block text-2xl md:text-3xl font-extrabold text-rose-500">1000+</span>
+                    <span className="block text-2xl md:text-3xl font-extrabold text-rose-500">
+                      {loading ? "..." : `${allCats.length}+`}
+                    </span>
                     <span className="text-xs text-slate-500 font-medium">Kucing Terdaftar</span>
                   </div>
                   <div className="text-center">
@@ -364,7 +366,7 @@ const CatMatch = () => {
                               cat.age ||
                               Math.floor(
                                 (Date.now() - new Date(cat.tglLahir).getTime()) /
-                                  (1000 * 60 * 60 * 24 * 30)
+                                (1000 * 60 * 60 * 24 * 30)
                               ),
                             color: cat.warna,
                             gender:
@@ -432,11 +434,10 @@ const CatMatch = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilter(!showFilter)}
-                  className={`flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border transition-all cursor-pointer ${
-                    showFilter
-                      ? "bg-amber-600 text-white border-amber-600 shadow-md"
-                      : "bg-amber-100 text-amber-900 border-amber-300/60 hover:bg-amber-200"
-                  }`}
+                  className={`flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border transition-all cursor-pointer ${showFilter
+                    ? "bg-amber-600 text-white border-amber-600 shadow-md"
+                    : "bg-amber-100 text-amber-900 border-amber-300/60 hover:bg-amber-200"
+                    }`}
                 >
                   <FaFilter />
                   <span>Filter Pencarian</span>
@@ -532,7 +533,7 @@ const CatMatch = () => {
                       breed: cat.ras,
                       age: Math.floor(
                         (Date.now() - new Date(cat.tglLahir).getTime()) /
-                          (1000 * 60 * 60 * 24 * 30)
+                        (1000 * 60 * 60 * 24 * 30)
                       ),
                       color: cat.warna,
                       gender: cat.jenisKelamin === "jantan" ? "Jantan" : "Betina",
