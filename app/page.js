@@ -198,7 +198,7 @@ const CatMatch = () => {
                   </div>
                   <div className="text-center">
                     <span className="block text-2xl md:text-3xl font-extrabold text-rose-500">
-                      {loading ? "..." : `${allCats.length}+`}
+                      {loading ? "..." : allCats.length}
                     </span>
                     <span className="text-xs text-slate-500 font-medium">Kucing Terdaftar</span>
                   </div>

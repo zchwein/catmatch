@@ -53,8 +53,8 @@ const AddCatModal = ({ isOpen, onClose, onAddCat }) => {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError("Ukuran file maksimal 2MB");
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Ukuran file maksimal 5MB");
       return;
     }
 
@@ -308,7 +308,7 @@ const AddCatModal = ({ isOpen, onClose, onAddCat }) => {
                         Klik untuk mengunggah foto
                       </p>
                       <span className="text-[10px] text-slate-400">
-                        Format JPG, PNG (Maksimal 2MB)
+                        Format JPG, PNG (Maksimal 5MB)
                       </span>
                     </div>
                   )}

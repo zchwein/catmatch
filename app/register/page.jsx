@@ -59,8 +59,8 @@ export default function RegisterPage() {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError("Ukuran file maksimal 2MB");
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Ukuran file maksimal 5MB");
       return;
     }
 
@@ -153,7 +153,7 @@ export default function RegisterPage() {
       console.error("Error during registration:", error);
       setError(
         error.response?.data?.message ||
-          "Terjadi kesalahan saat pendaftaran, silakan coba lagi."
+        "Terjadi kesalahan saat pendaftaran, silakan coba lagi."
       );
     } finally {
       setLoading(false);
@@ -221,11 +221,10 @@ export default function RegisterPage() {
                 {[1, 2, 3].map((step) => (
                   <div
                     key={step}
-                    className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-extrabold shadow-sm transition-all duration-300 ${
-                      currentStep >= step
+                    className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-extrabold shadow-sm transition-all duration-300 ${currentStep >= step
                         ? "gradient-warm text-white scale-110 shadow-md shadow-rose-500/20"
                         : "bg-white text-slate-400 border border-amber-200"
-                    }`}
+                      }`}
                   >
                     {currentStep > step ? <FaCheck /> : step}
                   </div>
@@ -439,7 +438,7 @@ export default function RegisterPage() {
                           Klik untuk memilih foto kucing
                         </span>
                         <span className="text-[10px] text-slate-400">
-                          Format JPG/PNG (Maks 2MB)
+                          Format JPG/PNG (Maks 5MB)
                         </span>
                       </div>
                     )}
