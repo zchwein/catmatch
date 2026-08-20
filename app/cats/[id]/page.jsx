@@ -16,6 +16,8 @@ import {
   FaVenus,
   FaCalendarAlt,
   FaExclamationCircle,
+  FaHeart,
+  FaCheckCircle,
 } from "react-icons/fa";
 import axios from "axios";
 import { getCatColorStyle } from "@/utils/colorHelper";
@@ -30,6 +32,10 @@ const CatDetailPage = () => {
   const [errorPrediksi, setErrorPrediksi] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userCats, setUserCats] = useState([]);
+  const [selectedCatId, setSelectedCatId] = useState(null);
+  const [submittingPerjodohan, setSubmittingPerjodohan] = useState(false);
+  const [perjodohanStatusMsg, setPerjodohanStatusMsg] = useState(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -42,7 +48,31 @@ const CatDetailPage = () => {
         const catData = response.data.cat;
         setCat(catData);
 
-        const kucing1 = localStorage.getItem("selectedCat");
+        // Fetch current user cats
+        const userId = localStorage.getItem("userId");
+        let currentCatId = localStorage.getItem("selectedCat");
+
+        if (userId) {
+          try {
+            const userCatsRes = await axios.get(
+              `${getApiUrl()}/api/cat/owner/${userId}`
+            );
+            const cats = userCatsRes.data.cat || [];
+            setUserCats(cats);
+
+            if (currentCatId && cats.some((c) => c._id === currentCatId)) {
+              setSelectedCatId(currentCatId);
+            } else if (cats.length > 0) {
+              currentCatId = cats[0]._id;
+              setSelectedCatId(currentCatId);
+              localStorage.setItem("selectedCat", currentCatId);
+            }
+          } catch (err) {
+            console.error("Error fetching user cats:", err);
+          }
+        }
+
+        const kucing1 = currentCatId;
         const kucing2 = id;
 
         if (kucing1 && kucing2) {
@@ -70,6 +100,60 @@ const CatDetailPage = () => {
     };
     fetchCatData();
   }, [id]);
+
+  const handleAjukanPerjodohan = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      setPerjodohanStatusMsg({
+        text: "Silakan login terlebih dahulu untuk mengajukan perjodohan.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (userCats.length === 0) {
+      setPerjodohanStatusMsg({
+        text: "Anda belum mendaftarkan kucing. Tambahkan kucing Anda di Halaman Profil terlebih dahulu.",
+        type: "error",
+      });
+      return;
+    }
+
+    const currentCatId = selectedCatId || localStorage.getItem("selectedCat");
+    if (!currentCatId) {
+      setPerjodohanStatusMsg({
+        text: "Pilih kucing Anda terlebih dahulu di Halaman Profil.",
+        type: "error",
+      });
+      return;
+    }
+
+    setSubmittingPerjodohan(true);
+    setPerjodohanStatusMsg(null);
+
+    try {
+      const response = await axios.post(`${getApiUrl()}/api/cat/perjodohan/add`, {
+        kucing1Id: currentCatId,
+        kucing2Id: id,
+      });
+
+      setPerjodohanStatusMsg({
+        text: response.data.message || "Pengajuan perjodohan berhasil dikirim!",
+        type: "success",
+      });
+    } catch (err) {
+      console.error("Error submitting perjodohan:", err);
+      const msg =
+        err.response?.data?.message ||
+        "Gagal mengajukan perjodohan. Silakan coba lagi.";
+      setPerjodohanStatusMsg({
+        text: msg,
+        type: "error",
+      });
+    } finally {
+      setSubmittingPerjodohan(false);
+    }
+  };
 
   const formatPhoneNumber = (phone) => {
     if (!phone) return "";
@@ -267,16 +351,83 @@ const CatDetailPage = () => {
                   )}
                 </div>
 
-                {/* WhatsApp Contact CTA */}
-                <div className="pt-4 border-t border-amber-100">
-                  <Link
-                    href={`https://wa.me/${formatPhoneNumber(cat?.ownerPhone)}`}
-                    className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm py-3.5 px-6 rounded-2xl shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
-                    target="_blank"
-                  >
-                    <FaWhatsapp className="text-xl animate-bounce" />
-                    <span>Hubungi Pemilik via WhatsApp ({cat?.ownerPhone || "Telepon"})</span>
-                  </Link>
+                {/* Action CTA Section: Perjodohan & WhatsApp */}
+                <div className="pt-4 border-t border-amber-100 space-y-3">
+                  {perjodohanStatusMsg && (
+                    <div
+                      className={`p-3.5 rounded-2xl text-xs font-bold flex items-center gap-2 border ${
+                        perjodohanStatusMsg.type === "success"
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                          : "bg-rose-50 text-rose-800 border-rose-200"
+                      }`}
+                    >
+                      {perjodohanStatusMsg.type === "success" ? (
+                        <FaCheckCircle className="text-emerald-500 text-base shrink-0" />
+                      ) : (
+                        <FaExclamationCircle className="text-rose-500 text-base shrink-0" />
+                      )}
+                      <span>{perjodohanStatusMsg.text}</span>
+                    </div>
+                  )}
+
+                  {userCats.length > 1 && (
+                    <div className="bg-amber-50/80 p-3 rounded-2xl border border-amber-200">
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                        Pilih Kucing Anda yang Ingin Dijodohkan:
+                      </label>
+                      <select
+                        value={selectedCatId || ""}
+                        onChange={(e) => {
+                          setSelectedCatId(e.target.value);
+                          localStorage.setItem("selectedCat", e.target.value);
+                        }}
+                        className="w-full p-2 bg-white border border-amber-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      >
+                        {userCats.map((userCat) => (
+                          <option key={userCat._id} value={userCat._id}>
+                            🐱 {userCat.nama} ({userCat.ras} - {userCat.jenisKelamin === "jantan" ? "Jantan" : "Betina"})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      onClick={handleAjukanPerjodohan}
+                      disabled={
+                        submittingPerjodohan ||
+                        cat?.ownerId === localStorage.getItem("userId")
+                      }
+                      className={`w-full font-extrabold text-sm py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        cat?.ownerId === localStorage.getItem("userId")
+                          ? "bg-slate-200 text-slate-500 cursor-not-allowed shadow-none border border-slate-300"
+                          : "gradient-warm text-white hover:scale-[1.01] shadow-rose-500/20"
+                      }`}
+                    >
+                      <FaHeart
+                        className={`text-lg ${
+                          submittingPerjodohan ? "animate-spin" : "animate-pulse"
+                        }`}
+                      />
+                      <span>
+                        {cat?.ownerId === localStorage.getItem("userId")
+                          ? "Kucing Milik Anda"
+                          : submittingPerjodohan
+                          ? "Mengirim..."
+                          : "Ajukan Perjodohan"}
+                      </span>
+                    </button>
+
+                    <Link
+                      href={`https://wa.me/${formatPhoneNumber(cat?.ownerPhone)}`}
+                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm py-3.5 px-4 rounded-2xl shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+                      target="_blank"
+                    >
+                      <FaWhatsapp className="text-xl animate-bounce" />
+                      <span>Hubungi WhatsApp</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
